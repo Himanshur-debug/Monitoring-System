@@ -1,0 +1,18 @@
+# Compiled object files
+*.o
+*.obj
+
+# Compiled dynamic libraries
+*.dll
+*.so
+*.dylib
+
+# Executables
+*.exe
+*.out
+
+# Ignore build directories
+build/
+dist/
+
+.vscode/
