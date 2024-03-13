@@ -75,24 +75,19 @@ std::string getNetworkStats() {
     std::getline(file, line); // Skip the first two lines
     std::getline(file, line);
 
-    // std::cout << "Network Statistics:" << std::endl;
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         std::string interface;
         iss >> interface;
 
-        // std::cout << "Interface: " << interface << std::endl;
-        // std::cout << "   ";
         interfaces += interface;
 
         for (int i = 0; i < 8; ++i) {
             std::string data;
             iss >> data;
             interfaces += " " + data;
-            // std::cout << data << " ";
         }
         interfaces += "\n";
-        // std::cout << std::endl;
     }
     return interfaces;
 }
