@@ -58,6 +58,7 @@ void Client::keyVerification() {
 void Client::sysInfo() {
     try {
         json message_json;
+        message_json["status"] = "1";
         message_json["hostname"] = getHostname();
         message_json["ipAddress"] = getIPAddress();
         message_json["cpu"] = std::to_string(getCPUUsage());
@@ -70,6 +71,8 @@ void Client::sysInfo() {
 
         if(errorCode) {
             std::cerr << "Error in sending data: " << errorCode.message() << std::endl;
+        } else {
+            std::cerr << "sysinfo sent: " << errorCode.message() << std::endl;
         }
     }
     catch(const std::exception& e) {
@@ -82,7 +85,7 @@ void Client::receiveResponse() {
         char response[1024]; 
         size_t response_length = stream_.read_some(buffer(response), errorCode); 
         if (errorCode) { 
-            std::cerr << "Error receiving message from server: " << errorCode.message() << std::endl; 
+            std::cerr << "Error receiving message from server!!!!!: " << errorCode.message() << std::endl; 
         } else { 
             std::string received_message(response, response_length);
             // Parse JSON
