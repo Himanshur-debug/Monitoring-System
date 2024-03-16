@@ -46,10 +46,12 @@ class ClientSession : public std::enable_shared_from_this<ClientSession> {
 
     private:
         std::string ConnectionKey_;
+        beast::flat_buffer buffer_;
         std::unique_ptr<websocket::stream<ssl::stream<ip::tcp::socket>>> wsStream_;
         void handleClient();
         void verifyClient();
         void receiveData();
+        void handleError(const boost::system::error_code& ec, const std::string& errorMessage);
 };
 
 

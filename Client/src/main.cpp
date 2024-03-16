@@ -4,7 +4,7 @@
 int main() { 
     try {
         Client* client = Client::getInstance();
-        client->initialize("192.168.1.47", "8080", "hello");
+        client->initialize("127.0.0.1", "8080", "hello");
         client->run();
     }
     catch(const std::exception& e) {

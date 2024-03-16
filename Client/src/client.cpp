@@ -46,7 +46,8 @@ void Client::keyVerification() {
 
     if (errorCode) { 
         if (errorCode) {
-            std::cerr << "Error sending connection key to the server: " << errorCode.message() << std::endl;
+            handleError(errorCode, "Error sending connection key to the server: ");
+            //std::cerr << "Error sending connection key to the server: " << errorCode.message() << std::endl;
         } else {
             std::cout << "Sent connection key to the server \n" << std::endl;
         }
@@ -70,7 +71,8 @@ void Client::sysInfo() {
         size_t bytes_written = stream_.write(buffer(message), errorCode);
 
         if(errorCode) {
-            std::cerr << "Error in sending data: " << errorCode.message() << std::endl;
+            handleError(errorCode, "Error in sending data: ");
+            //std::cerr << "Error in sending data: " << errorCode.message() << std::endl;
         } else {
             std::cerr << "sysinfo sent: " << errorCode.message() << std::endl;
         }
@@ -85,7 +87,8 @@ void Client::receiveResponse() {
         char response[1024]; 
         size_t response_length = stream_.read_some(buffer(response), errorCode); 
         if (errorCode) { 
-            std::cerr << "Error receiving message from server!!!!!: " << errorCode.message() << std::endl; 
+            handleError(errorCode, "Error receiving message from server!!!!!: ");
+            //std::cerr << "Error receiving message from server!!!!!: " << errorCode.message() << std::endl; 
         } else { 
             std::string received_message(response, response_length);
             // Parse JSON
@@ -104,6 +107,7 @@ void Client::run() {
     {
         connect();
         keyVerification();
+        // keyVerification();
         while (shouldRun_)    //
         {
             sysInfo();
@@ -127,7 +131,13 @@ void Client::run() {
         }
     }
 }
-
+void Client::handleError(const boost::system::error_code& ec, const std::string& errorMessage) {
+    if (ec == boost::asio::error::eof || ec == boost::asio::ssl::error::stream_truncated) {
+        std::cout << "Client disconnected." << std::endl;
+    } else {
+        std::cerr << errorMessage<< ec.message() << std::endl;
+    }
+}
 void Client::disconnect() {
     return;
 }

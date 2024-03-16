@@ -39,6 +39,7 @@ class Client {
         int reconnectAttempts_;
 
         Client(): ctx_(ssl::context::tlsv12_client), stream_(ioc_, ctx_){};
+        void handleError(const boost::system::error_code& ec, const std::string& errorMessage);
         ~Client();
     public:
         Client(const Client&) = delete;
