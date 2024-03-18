@@ -18,7 +18,7 @@ void Client::initialize(const std::string &ip, const std::string &port, const st
     reconnectAttempts_ = 0;
 
     ctx_ = ssl::context {ssl::context::tlsv12_server};
-    ctx_.load_verify_file("/home/vboxuser/MonitoringSys/Certificates/server.crt");
+    ctx_.load_verify_file(serverCrt);
     ctx_.set_verify_mode(ssl::verify_peer);
 }
 
@@ -35,7 +35,7 @@ void Client::connect() {
         // Handshake with WebSocket
         stream_.handshake(serverIP_, "/");
     } catch (const std::exception& e) {
-        std::cerr << "Connect Exception: " << e.what() << std::endl;
+        //std::cerr << "Connect Exception: " << e.what() << std::endl;
         throw; // Re-throw the exception to propagate it further if needed
     }
 }
@@ -65,6 +65,8 @@ void Client::sysInfo() {
         message_json["cpu"] = std::to_string(getCPUUsage());
         message_json["ram"] = std::to_string(getRAMUsage());
         message_json["netstate"] = getNetworkStats();
+        message_json["hddUtilization"] = getHDDUtilization(); 
+        message_json["idleTime"] = std::to_string(getIdleTime()); 
 
         std::string message = message_json.dump(); 
         // boost::asio::write(socket, buffer(message), errorCode);
@@ -107,7 +109,6 @@ void Client::run() {
     {
         connect();
         keyVerification();
-        // keyVerification();
         while (shouldRun_)    //
         {
             sysInfo();
@@ -115,9 +116,10 @@ void Client::run() {
             std::this_thread::sleep_for(std::chrono::seconds(5));
         }
     }
-    catch (const std::exception& e)
+    catch (const std::exception& e) 
     {
         std::cerr << "Exception: " << e.what() << std::endl;
+        std::cerr << "\nRetrying...." << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(5));
         if (reconnectAttempts_ < 2 && shouldRun_==true)
         {
@@ -133,7 +135,8 @@ void Client::run() {
 }
 void Client::handleError(const boost::system::error_code& ec, const std::string& errorMessage) {
     if (ec == boost::asio::error::eof || ec == boost::asio::ssl::error::stream_truncated) {
-        std::cout << "Client disconnected." << std::endl;
+        std::cout << "Connection disconnected From Server." << std::endl;
+        shouldRun_ = false;
     } else {
         std::cerr << errorMessage<< ec.message() << std::endl;
     }

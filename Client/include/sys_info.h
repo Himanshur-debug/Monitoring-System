@@ -16,3 +16,5 @@ std::string getIPAddress();
 double getCPUUsage();
 long getRAMUsage();
 std::string getNetworkStats();
+std::string getHDDUtilization(); 
+long getIdleTime(); 

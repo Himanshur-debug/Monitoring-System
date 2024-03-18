@@ -9,6 +9,7 @@
 #include <boost/beast/websocket/ssl.hpp>
 #include <thread>
 #include <nlohmann/json.hpp>
+#include <DatabaseConnector.h>
  
 using namespace boost::asio;
 namespace beast = boost::beast;
@@ -26,6 +27,8 @@ class Server {
         ssl::context context_;
         //std::unique_ptr<tcp::acceptor> acceptor_;
         tcp::acceptor acceptor_;
+
+        sql::Connection *dbConnection;
 
     public:
         Server(io_context& io_context_, std::string conKey);
@@ -45,6 +48,7 @@ class ClientSession : public std::enable_shared_from_this<ClientSession> {
         }
 
     private:
+        sql::Connection *dbConnection;
         std::string ConnectionKey_;
         beast::flat_buffer buffer_;
         std::unique_ptr<websocket::stream<ssl::stream<ip::tcp::socket>>> wsStream_;

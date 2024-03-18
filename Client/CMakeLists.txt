@@ -5,7 +5,7 @@ project(Client VERSION 0.0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 find_package(OpenSSL REQUIRED)
 
-set(CERTIFICATE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../Certificates)
+set(CERTIFICATE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Certificates)
 
 file(GLOB SOURCES src/* src/*/* src/*/*/*)
 # add_library(${PROJECT_NAME} ${SOURCES})

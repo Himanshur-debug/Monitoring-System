@@ -1,4 +1,6 @@
-#include<server.h>
+#include <server.h>
+#include <DatabaseInitializer.h>
+// #include <config.h>
 
 Server::Server(io_context& io_context_, std::string conKey): ConnectionKey_(conKey), 
     context_(ssl::context::tlsv12), acceptor_(io_context_, tcp::endpoint(tcp::v4(), 8080)) {
@@ -14,12 +16,12 @@ Server::Server(io_context& io_context_, std::string conKey): ConnectionKey_(conK
         context_.set_password_callback([](std::size_t max_length, ssl::context::password_purpose purpose) {
             return "password"; // Set your certificate password here
         });
-        context_.use_certificate_chain_file("/home/vboxuser/MonitoringSys/Certificates/server.crt");
-        context_.use_private_key_file("/home/vboxuser/MonitoringSys/Certificates/server.key", ssl::context::pem);
+        context_.use_certificate_chain_file(serverCrt);
+        context_.use_private_key_file(serverKey, ssl::context::pem);
 
         // Verify the certificate
         context_.set_verify_mode(ssl::verify_peer); // | ssl::verify_fail_if_no_peer_cert);
-        context_.load_verify_file("/home/vboxuser/MonitoringSys/Certificates/server.crt"); // Set your CA certificate path here
+        context_.load_verify_file(serverCrt); // Set your CA certificate path here
 
         // Debugging output
         context_.set_verify_callback(
@@ -34,6 +36,8 @@ Server::Server(io_context& io_context_, std::string conKey): ConnectionKey_(conK
         );
         
         acceptor_.set_option(boost::asio::socket_base::reuse_address(true));
+
+        std::cout<< "SERVER STARTED..." << std::endl;
 
         accept_();
 
@@ -146,13 +150,20 @@ void ClientSession::receiveData() {
                     std::string cpu = received_json["cpu"];
                     std::string ram = received_json["ram"];
                     std::string netstats = received_json["netstate"];
+                    std::string hddUtilization = received_json["hddUtilization"];
+                    std::string idleTime = received_json["idleTime"];
 
                     std::cout << "host name: "<< hostName << std::endl; 
                     std::cout << "ip address: "<< ipaddr << std::endl; 
                     std::cout << "CPU: "<< cpu << std::endl; 
                     std::cout << "RAM: "<< ram << std::endl; 
                     std::cout << "Network Stats: "<< netstats << std::endl; 
-                    std::cout << "data received" << std::endl;
+                    std::cout << "HDD Utilization: "<< hddUtilization << std::endl; 
+                    std::cout << "Idle Time: "<< idleTime << std::endl; 
+                    std::cout << "data received\n\n" << std::endl;
+
+                    DatabaseInitializer dbInitializer("localhost", "root", "hello World @123");
+                    dbInitializer.insertSystemInformation(ipaddr, ram, cpu, idleTime, hddUtilization, netstats);
 
                     // Create JSON to send back
                     json reply_json;
