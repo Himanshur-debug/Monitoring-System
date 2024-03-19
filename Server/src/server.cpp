@@ -2,8 +2,8 @@
 #include <DatabaseInitializer.h>
 // #include <config.h>
 
-Server::Server(io_context& io_context_, std::string conKey): ConnectionKey_(conKey), 
-    context_(ssl::context::tlsv12), acceptor_(io_context_, tcp::endpoint(tcp::v4(), 8080)) {
+Server::Server(io_context& io_context_, std::string conKey, DatabaseInitializer dbInitializer): ConnectionKey_(conKey),
+    dbInitializer_(dbInitializer), context_(ssl::context::tlsv12), acceptor_(io_context_, tcp::endpoint(tcp::v4(), 8080)) {
 
     try {
         context_.set_options(ssl::context::default_workarounds |
@@ -51,7 +51,7 @@ Server::Server(io_context& io_context_, std::string conKey): ConnectionKey_(conK
 void Server::accept_() {
     try {
 
-        auto new_clientSession = std::make_shared<ClientSession>(static_cast<io_context&>(acceptor_.get_executor().context()), context_, ConnectionKey_);
+        auto new_clientSession = std::make_shared<ClientSession>(static_cast<io_context&>(acceptor_.get_executor().context()), context_, ConnectionKey_, dbInitializer_);
 
         acceptor_.async_accept(new_clientSession->wsStream().next_layer().lowest_layer(),
             [this, new_clientSession](const boost::system::error_code& error) {
@@ -72,8 +72,8 @@ void Server::accept_() {
     
 }
 
-ClientSession::ClientSession(io_context& io_context, ssl::context& context, std::string conKey)
-        : ConnectionKey_(conKey), wsStream_(std::make_unique<websocket::stream<ssl::stream<ip::tcp::socket>>>(io_context, context)) {}
+ClientSession::ClientSession(io_context& io_context, ssl::context& context, std::string conKey, DatabaseInitializer dbInitializer)
+        : ConnectionKey_(conKey), dbInitializer_(dbInitializer), wsStream_(std::make_unique<websocket::stream<ssl::stream<ip::tcp::socket>>>(io_context, context)) {}
 
 void ClientSession::start() {
     wsStream_->next_layer().async_handshake(ssl::stream_base::server,
@@ -162,8 +162,8 @@ void ClientSession::receiveData() {
                     std::cout << "Idle Time: "<< idleTime << std::endl; 
                     std::cout << "data received\n\n" << std::endl;
 
-                    DatabaseInitializer dbInitializer("localhost", "root", "hello World @123");
-                    dbInitializer.insertSystemInformation(ipaddr, ram, cpu, idleTime, hddUtilization, netstats);
+                    // DatabaseInitializer dbInitializer("localhost", "root", "hello World @123");
+                    dbInitializer_.insertSystemInformation(ipaddr, ram, cpu, idleTime, hddUtilization, netstats);
 
                     // Create JSON to send back
                     json reply_json;
