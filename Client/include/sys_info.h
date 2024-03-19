@@ -9,7 +9,6 @@
 #include <ifaddrs.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <unordered_map>
 
 
 std::string getHostname();
@@ -17,3 +16,5 @@ std::string getIPAddress();
 double getCPUUsage();
 long getRAMUsage();
 std::string getNetworkStats();
+std::string getHDDUtilization(); 
+long getIdleTime(); 
