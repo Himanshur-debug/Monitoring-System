@@ -2,17 +2,17 @@
 #include "DatabaseInitializer.h"
 
 DatabaseInitializer::DatabaseInitializer(const std::string& server, const std::string& username, const std::string& password)
-    : dbConnector(server, username, password), dbHandler(dbConnector.dbConnection) {}
+    : dbConnector(server, username, password), dbHandler(dbConnector.dbConnection) {
+        DbStructure dbStructure = DbStructure::getInstance(dbConnector.dbConnection);
+        dbStructure.CreateDb();
+        dbStructure.CreateTables();
+    }
 
 bool DatabaseInitializer::initializeDatabase() {
     if (!dbConnector.connectToDatabase()) {
         std::cerr << "Failed to connect to the database." << std::endl;
         return false;
     }
-
-    DbStructure dbStructure = DbStructure::getInstance(dbConnector.dbConnection);
-    dbStructure.CreateDb();
-    dbStructure.CreateTables();
 
     return true;
 }

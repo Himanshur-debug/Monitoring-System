@@ -1,14 +1,16 @@
 #include <iostream> 
 #include <server.h>
 #include <boost/asio.hpp>
-#include "DatabaseInitializer.h"
+#include <DatabaseInitializer.h>
 
 using namespace boost::asio;
  
 int main() { 
     try {
         boost::asio::io_context ioc_;
-        Server server(ioc_, "hello");
+        DatabaseInitializer dbInitializer("localhost", "root", "hello World @123");
+        dbInitializer.initializeDatabase();
+        Server server(ioc_, "hello", dbInitializer);
 
         ioc_.run();
     }

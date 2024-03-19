@@ -9,7 +9,8 @@
 #include <boost/beast/websocket/ssl.hpp>
 #include <thread>
 #include <nlohmann/json.hpp>
-#include <DatabaseConnector.h>
+// #include <DatabaseConnector.h>
+#include <DatabaseInitializer.h>
  
 using namespace boost::asio;
 namespace beast = boost::beast;
@@ -22,23 +23,21 @@ using json = nlohmann::json;
 
 class Server {
     private:
+        DatabaseInitializer& dbInitializer_;
         std::string ConnectionKey_;
     
         ssl::context context_;
-        //std::unique_ptr<tcp::acceptor> acceptor_;
         tcp::acceptor acceptor_;
 
-        sql::Connection *dbConnection;
-
     public:
-        Server(io_context& io_context_, std::string conKey);
+        Server(io_context& io_context_, std::string conKey, DatabaseInitializer dbInitializer);
         void accept_();
 };
 
 
 class ClientSession : public std::enable_shared_from_this<ClientSession> {
     public:
-        ClientSession(io_context& io_context, ssl::context& context, std::string ConnectionKey_);
+        ClientSession(io_context& io_context, ssl::context& context, std::string ConnectionKey_, DatabaseInitializer dbInitializer);
         void start();
         websocket::stream<ssl::stream<ip::tcp::socket>>& wsStream() {
             return *wsStream_;
@@ -48,7 +47,7 @@ class ClientSession : public std::enable_shared_from_this<ClientSession> {
         }
 
     private:
-        sql::Connection *dbConnection;
+        DatabaseInitializer dbInitializer_;
         std::string ConnectionKey_;
         beast::flat_buffer buffer_;
         std::unique_ptr<websocket::stream<ssl::stream<ip::tcp::socket>>> wsStream_;
