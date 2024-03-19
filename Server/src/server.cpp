@@ -162,7 +162,8 @@ void ClientSession::receiveData() {
                     std::cout << "Idle Time: "<< idleTime << std::endl; 
                     std::cout << "data received\n\n" << std::endl;
 
-                    DatabaseInitializer dbInitializer("localhost", "root", "hello World @123");
+                    DatabaseInitializer dbInitializer("localhost", "root", "1234");
+                    dbInitializer.initializeDatabase();
                     dbInitializer.insertSystemInformation(ipaddr, ram, cpu, idleTime, hddUtilization, netstats);
 
                     // Create JSON to send back
