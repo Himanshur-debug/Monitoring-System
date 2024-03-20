@@ -14,6 +14,42 @@ std::string getHostname() {
     return std::string(hostname);
 }
 
+//Get mac address
+std::string getmacAddress(){
+     FILE* pipe = popen("ifconfig", "r"); // You can use "ip link" for newer systems
+    if (!pipe) {
+
+        perror("Error opening pipe!");
+
+        return "Unable to fetch MAC address";
+
+    }
+    char buffer[128];
+    std::string result = "";
+    // Read the output of the command line by line
+    while (!feof(pipe)) {
+
+        if (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+
+            result += buffer;
+
+        }
+
+    }
+    pclose(pipe);
+    // Find and extract the MAC address from the result (for "ether" lines)
+    size_t macPos = result.find("ether");
+    if (macPos != std::string::npos) {
+        size_t start = macPos + 6; // Position after "ether"
+        size_t end = start + 17;  // MAC address length (17 characters)
+        return result.substr(start, end - start);
+    }
+
+    return "MAC_address_not_found";
+
+}
+
+
 // Get the system IP address
 std::string getIPAddress() {
     struct ifaddrs *ifaddr, *ifa;
@@ -60,7 +96,7 @@ double getCPUUsage() {
 }
 
 // Get RAM usage
-long getRAMUsage() {
+double getRAMUsage() {
     std::ifstream file("/proc/meminfo");
     std::string line;
     long totalMem = 0, freeMem = 0;
@@ -72,7 +108,8 @@ long getRAMUsage() {
         if (key == "MemTotal:") totalMem = value;
         if (key == "MemFree:") freeMem = value;
     }
-    return (totalMem - freeMem);
+    double mem = (double)(totalMem - freeMem)/(totalMem);
+    return mem *100.0;
 }
 
 // Get network stats

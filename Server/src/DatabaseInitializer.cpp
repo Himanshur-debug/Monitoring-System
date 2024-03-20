@@ -17,10 +17,10 @@ bool DatabaseInitializer::initializeDatabase() {
     return true;
 }
 
-void DatabaseInitializer::insertSystemInformation(const std::string& ipAddr, const std::string& ram, const std::string& cpu, const std::string& idle, const std::string& hdd, const std::string& netw) {
-    if (!dbHandler.clientExists(ipAddr)) {
-        dbHandler.insertClientDetail(ipAddr, "hostname"); // Example hostname, replace with actual value
+void DatabaseInitializer::insertSystemInformation(const std::string& hostname,const std::string& macAddr,const std::string& ipAddr, const std::string& ram, const std::string& cpu, const std::string& idle, const std::string& hdd, const std::string& netw) {
+    if (!dbHandler.clientExists(macAddr)) {
+        dbHandler.insertClientDetail(macAddr, hostname); 
     }
 
-    dbHandler.insertSysteminfo(ipAddr, ram, cpu, idle, hdd, netw);
+    dbHandler.insertSysteminfo(macAddr,ipAddr, ram, cpu, idle, hdd, netw);
 }

@@ -12,9 +12,10 @@
 
 
 std::string getHostname();
+std::string getmacAddress();
 std::string getIPAddress();
 double getCPUUsage();
-long getRAMUsage();
+double getRAMUsage();
 std::string getNetworkStats();
 std::string getHDDUtilization(); 
 long getIdleTime(); 
