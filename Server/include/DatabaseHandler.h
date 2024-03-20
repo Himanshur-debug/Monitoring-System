@@ -11,10 +11,10 @@
 class DatabaseHandler {
 public:
     DatabaseHandler(sql::Connection *dbConnection);
-    void insertClientDetail(const std::string &ipAddr, const std::string &sys_n);
+    void insertClientDetail(const std::string &macAddr, const std::string &sys_n);
     // int getClientID(const std::string &macAddr);
-    int insertSysteminfo(const std::string &ipAddr, const std::string &ram, const std::string &cpu, const std::string &idle, const std::string &hdd, const std::string &netw);
-    bool clientExists(const std::string &ipAddr);
+    int insertSysteminfo(const std::string &macAddr, const std::string &ipAddr, const std::string &ram, const std::string &cpu, const std::string &idle, const std::string &hdd, const std::string &netw);
+    bool clientExists(const std::string &macAddr);
 
 private:
     sql::Connection *dbConnection;

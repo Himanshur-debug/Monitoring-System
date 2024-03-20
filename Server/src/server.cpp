@@ -1,5 +1,6 @@
 #include <server.h>
 #include <DatabaseInitializer.h>
+#include <string>
 // #include <config.h>
 
 Server::Server(io_context& io_context_, std::string conKey, DatabaseInitializer dbInitializer): ConnectionKey_(conKey),
@@ -146,6 +147,7 @@ void ClientSession::receiveData() {
                         return ;
                     }
                     std::string hostName = received_json["hostname"];
+                    std::string macaddr = received_json["macAddress"];
                     std::string ipaddr = received_json["ipAddress"];
                     std::string cpu = received_json["cpu"];
                     std::string ram = received_json["ram"];
@@ -154,6 +156,7 @@ void ClientSession::receiveData() {
                     std::string idleTime = received_json["idleTime"];
 
                     std::cout << "host name: "<< hostName << std::endl; 
+                    std::cout << "mac address"<< macaddr << std::endl;
                     std::cout << "ip address: "<< ipaddr << std::endl; 
                     std::cout << "CPU: "<< cpu << std::endl; 
                     std::cout << "RAM: "<< ram << std::endl; 
@@ -163,12 +166,28 @@ void ClientSession::receiveData() {
                     std::cout << "data received\n\n" << std::endl;
 
                     // DatabaseInitializer dbInitializer("localhost", "root", "hello World @123");
-                    dbInitializer_.insertSystemInformation(ipaddr, ram, cpu, idleTime, hddUtilization, netstats);
+                    dbInitializer_.insertSystemInformation(hostName, macaddr, ipaddr, ram, cpu, idleTime, hddUtilization, netstats);
 
                     // Create JSON to send back
                     json reply_json;
                     reply_json["status"] = "OK";
                     reply_json["message"] = "Received message successfully";
+                    
+                    if (std::stod(cpu) > 70.0) {
+                        // Create alert message
+                        reply_json["status"] = "ALERT";
+                        reply_json["message"] = reply_json["message"].get<std::string>() + "\nCPU usage exceeds 70%.";
+
+                    }
+                    if (std::stod(ram) > 70.0){
+                        reply_json["status"] = "ALERT";
+                        reply_json["message"] = reply_json["message"].get<std::string>() + "\nRAM usage exceeds 70%.";
+                    }
+                    if (std::stod(hddUtilization) > 70.0){
+                        reply_json["status"] = "ALERT";
+                        reply_json["message"] = reply_json["message"].get<std::string>() + "\nHDD utilization exceeds 70%.";
+                    }
+                    
                     std::string reply_message = reply_json.dump();
 
                     wsStream_->async_write(boost::asio::buffer(reply_message),

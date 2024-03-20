@@ -61,6 +61,7 @@ void Client::sysInfo() {
         json message_json;
         message_json["status"] = "1";
         message_json["hostname"] = getHostname();
+        message_json["macAddress"] = getmacAddress();
         message_json["ipAddress"] = getIPAddress();
         message_json["cpu"] = std::to_string(getCPUUsage());
         message_json["ram"] = std::to_string(getRAMUsage());
