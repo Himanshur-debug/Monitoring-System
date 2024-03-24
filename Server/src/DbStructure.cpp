@@ -1,7 +1,7 @@
 
 #include <cppconn/driver.h>
 #include <cppconn/connection.h>
-#include <cppconn/statement.h>  // Include the statement header
+#include <cppconn/statement.h>  
 
 #include <DbStructure.h>
 

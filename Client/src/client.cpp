@@ -119,6 +119,7 @@ void Client::run() {
     }
     catch (const std::exception& e) 
     {
+        std::cout<<"Server Not Responding!!!     Retrying..." << std::endl;
         std::cerr << "Exception: " << e.what() << std::endl;
         std::cerr << "\nRetrying...." << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(5));

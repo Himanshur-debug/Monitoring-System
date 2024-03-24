@@ -2,7 +2,7 @@
     {
         "dbAddress": "127.0.0.1:3306",
         "dbUser": "root",
-        "dbPassword": "1234"
+        "dbPassword": "hello World @123"
     },
     {
         "authKey": "hello"

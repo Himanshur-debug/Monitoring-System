@@ -1,0 +1,1 @@
+/usr/bin/g++ -g CMakeFiles/ClientUI.dir/ClientUI_autogen/mocs_compilation.cpp.o CMakeFiles/ClientUI.dir/main.cpp.o CMakeFiles/ClientUI.dir/mainwindow.cpp.o -o ClientUI  /usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.15.3 /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.15.3 /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.15.3 

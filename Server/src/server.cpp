@@ -107,7 +107,7 @@ void ClientSession::verifyClient() {
             if (!ec) {
                 
                 std::string receivedKey(beast::buffers_to_string(buffer_.data()));
-                std::cout<<receivedKey<<receivedKey.size()<<std::endl;
+                // std::cout<<receivedKey<<receivedKey.size()<<std::endl;
                 if (receivedKey == ConnectionKey_) {
                     std::cout << " \n \nConnection key is valid. Client is authorized.\n" << std::endl;
 
