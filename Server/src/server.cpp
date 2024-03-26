@@ -1,7 +1,16 @@
 #include <server.h>
 #include <DatabaseInitializer.h>
 #include <string>
-// #include <config.h>
+
+std::atomic<bool> Server::running_(true);
+void Server::signalHandler(int signal) {
+    if ((signal == SIGINT || signal == SIGTERM) && running_) {
+        std::cout << "\n\nServer Shutting down.\n\n" << std::endl;
+        running_ = false;
+        
+        exit(0);
+    }
+}
 
 Server::Server(io_context& io_context_, std::string conKey, DatabaseInitializer dbInitializer): ConnectionKey_(conKey),
     dbInitializer_(dbInitializer), context_(ssl::context::tlsv12), acceptor_(io_context_, tcp::endpoint(tcp::v4(), 8080)) {
@@ -38,14 +47,14 @@ Server::Server(io_context& io_context_, std::string conKey, DatabaseInitializer 
         
         acceptor_.set_option(boost::asio::socket_base::reuse_address(true));
 
-        std::cout<< "SERVER STARTED..." << std::endl;
+        std::cout<< "SERVER STARTED..." <<std::endl;
 
         accept_();
 
-        } catch (const std::exception& e) {
-            std::cerr << "SSL context setup error: " << e.what() << std::endl;
-            throw;
-        }
+    } catch (const std::exception& e) {
+        std::cerr << "SSL context setup error: " << e.what() << std::endl;
+        throw;
+    }
 
 }
 

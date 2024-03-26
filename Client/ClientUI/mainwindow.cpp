@@ -1,9 +1,9 @@
 #include "mainwindow.h"
 #include <QVBoxLayout>
-
-#include <iostream>
+#include <QRegularExpression>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), clientProcess(new QProcess(this)) {
+    this->resize(400, 300);
     setupUi();
 }
 
@@ -38,13 +38,13 @@ void MainWindow::updateClientButtonText(int exitCode, QProcess::ExitStatus exitS
 
 }
 
-
 void MainWindow::setupUi() {
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
 
     clientButton = new QPushButton("Start Client", centralWidget);
     outputTextEdit = new QTextEdit(centralWidget);
+    outputTextEdit->setReadOnly(true);
 
     layout->addWidget(clientButton);
     layout->addWidget(outputTextEdit);

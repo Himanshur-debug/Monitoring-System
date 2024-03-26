@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QTextEdit>
 #include <QDebug>
+#include "datawindow.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -15,15 +16,16 @@ public:
     ~MainWindow();
 
 private slots:
-//    void startServer();
     void Server();
     void updateServerButtonText(int exitCode, QProcess::ExitStatus exitStatus);
-//    void stopServer();
+    void openDataWindow();
 
 private:
     QPushButton *serverButton;
     QProcess *serverProcess;
     QTextEdit *outputTextEdit;
+    QPushButton *dataWindowButton;
+    DataWindow *dataWindow;
     void setupUi();
 };
 

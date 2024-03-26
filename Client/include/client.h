@@ -8,6 +8,7 @@
 #include <boost/beast/websocket.hpp>
 #include <string>
 #include <cstdlib>
+#include <stdlib.h>
 #include <cstdio>
 #include <ctime>
 #include <thread>

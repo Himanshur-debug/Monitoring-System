@@ -32,3 +32,13 @@ target_link_libraries(${PROJECT_NAME}
 # sudo apt install nlohmann-json3-dev
 # sudo apt-get install cmake
 
+# Qt MySql
+# sudo apt-get update
+# sudo apt-get install libmysqlclient-dev
+# sudo apt-get install qtbase5-dev qtbase5-dev-tools libqt5sql5 libqt5sql5-mysql
+
+# dpkg -l | grep mysql-server
+# sudo find / -name mysql
+
+
+

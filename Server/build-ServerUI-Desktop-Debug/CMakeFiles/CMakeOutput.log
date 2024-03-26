@@ -228,3 +228,195 @@ Parsed CXX implicit link information from above output:
   implicit fwks: []
 
 
+Determining if the include file pthread.h exists passed with the following output:
+Change Dir: /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_9d863/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_9d863.dir/build.make CMakeFiles/cmTC_9d863.dir/build
+gmake[1]: Entering directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_9d863.dir/CheckIncludeFile.cxx.o
+/usr/bin/g++    -o CMakeFiles/cmTC_9d863.dir/CheckIncludeFile.cxx.o -c /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp/CheckIncludeFile.cxx
+Linking CXX executable cmTC_9d863
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9d863.dir/link.txt --verbose=1
+/usr/bin/g++ CMakeFiles/cmTC_9d863.dir/CheckIncludeFile.cxx.o -o cmTC_9d863 
+gmake[1]: Leaving directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+
+
+
+Performing C++ SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD succeeded with the following output:
+Change Dir: /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_805ea/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_805ea.dir/build.make CMakeFiles/cmTC_805ea.dir/build
+gmake[1]: Entering directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_805ea.dir/src.cxx.o
+/usr/bin/g++ -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_805ea.dir/src.cxx.o -c /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_805ea
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_805ea.dir/link.txt --verbose=1
+/usr/bin/g++ CMakeFiles/cmTC_805ea.dir/src.cxx.o -o cmTC_805ea 
+gmake[1]: Leaving directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the include file pthread.h exists passed with the following output:
+Change Dir: /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_42ee8/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_42ee8.dir/build.make CMakeFiles/cmTC_42ee8.dir/build
+gmake[1]: Entering directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_42ee8.dir/CheckIncludeFile.cxx.o
+/usr/bin/g++    -o CMakeFiles/cmTC_42ee8.dir/CheckIncludeFile.cxx.o -c /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp/CheckIncludeFile.cxx
+Linking CXX executable cmTC_42ee8
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_42ee8.dir/link.txt --verbose=1
+/usr/bin/g++ CMakeFiles/cmTC_42ee8.dir/CheckIncludeFile.cxx.o -o cmTC_42ee8 
+gmake[1]: Leaving directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+
+
+
+Performing C++ SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD succeeded with the following output:
+Change Dir: /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_08833/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_08833.dir/build.make CMakeFiles/cmTC_08833.dir/build
+gmake[1]: Entering directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_08833.dir/src.cxx.o
+/usr/bin/g++ -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_08833.dir/src.cxx.o -c /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_08833
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_08833.dir/link.txt --verbose=1
+/usr/bin/g++ CMakeFiles/cmTC_08833.dir/src.cxx.o -o cmTC_08833 
+gmake[1]: Leaving directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the include file pthread.h exists passed with the following output:
+Change Dir: /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_963bd/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_963bd.dir/build.make CMakeFiles/cmTC_963bd.dir/build
+gmake[1]: Entering directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_963bd.dir/CheckIncludeFile.cxx.o
+/usr/bin/g++    -o CMakeFiles/cmTC_963bd.dir/CheckIncludeFile.cxx.o -c /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp/CheckIncludeFile.cxx
+Linking CXX executable cmTC_963bd
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_963bd.dir/link.txt --verbose=1
+/usr/bin/g++ CMakeFiles/cmTC_963bd.dir/CheckIncludeFile.cxx.o -o cmTC_963bd 
+gmake[1]: Leaving directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+
+
+
+Performing C++ SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD succeeded with the following output:
+Change Dir: /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_e7f21/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_e7f21.dir/build.make CMakeFiles/cmTC_e7f21.dir/build
+gmake[1]: Entering directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_e7f21.dir/src.cxx.o
+/usr/bin/g++ -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_e7f21.dir/src.cxx.o -c /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_e7f21
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e7f21.dir/link.txt --verbose=1
+/usr/bin/g++ CMakeFiles/cmTC_e7f21.dir/src.cxx.o -o cmTC_e7f21 
+gmake[1]: Leaving directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the include file pthread.h exists passed with the following output:
+Change Dir: /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_17767/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_17767.dir/build.make CMakeFiles/cmTC_17767.dir/build
+gmake[1]: Entering directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_17767.dir/CheckIncludeFile.cxx.o
+/usr/bin/g++    -o CMakeFiles/cmTC_17767.dir/CheckIncludeFile.cxx.o -c /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp/CheckIncludeFile.cxx
+Linking CXX executable cmTC_17767
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_17767.dir/link.txt --verbose=1
+/usr/bin/g++ CMakeFiles/cmTC_17767.dir/CheckIncludeFile.cxx.o -o cmTC_17767 
+gmake[1]: Leaving directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+
+
+
+Performing C++ SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD succeeded with the following output:
+Change Dir: /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_c8d15/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_c8d15.dir/build.make CMakeFiles/cmTC_c8d15.dir/build
+gmake[1]: Entering directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_c8d15.dir/src.cxx.o
+/usr/bin/g++ -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_c8d15.dir/src.cxx.o -c /home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_c8d15
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c8d15.dir/link.txt --verbose=1
+/usr/bin/g++ CMakeFiles/cmTC_c8d15.dir/src.cxx.o -o cmTC_c8d15 
+gmake[1]: Leaving directory '/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+

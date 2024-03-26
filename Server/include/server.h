@@ -9,14 +9,11 @@
 #include <boost/beast/websocket/ssl.hpp>
 #include <thread>
 #include <nlohmann/json.hpp>
-// #include <DatabaseConnector.h>
 #include <DatabaseInitializer.h>
  
 using namespace boost::asio;
 namespace beast = boost::beast;
-// namespace http = beast::http;
 namespace websocket = beast::websocket;
-// namespace asio = boost::asio;
 using tcp = boost::asio::ip::tcp;
 namespace ssl = boost::asio::ssl;
 using json = nlohmann::json;
@@ -25,11 +22,12 @@ class Server {
     private:
         DatabaseInitializer& dbInitializer_;
         std::string ConnectionKey_;
-    
+        static std::atomic<bool> running_;
         ssl::context context_;
         tcp::acceptor acceptor_;
 
     public:
+        static void signalHandler(int signal);
         Server(io_context& io_context_, std::string conKey, DatabaseInitializer dbInitializer);
         void accept_();
 };

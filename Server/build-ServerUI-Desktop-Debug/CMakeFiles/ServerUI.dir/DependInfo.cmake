@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/vboxuser/test/MonitoringSys/Server/build-ServerUI-Desktop-Debug/ServerUI_autogen/mocs_compilation.cpp" "CMakeFiles/ServerUI.dir/ServerUI_autogen/mocs_compilation.cpp.o" "gcc" "CMakeFiles/ServerUI.dir/ServerUI_autogen/mocs_compilation.cpp.o.d"
+  "/home/vboxuser/test/MonitoringSys/Server/ServerUI/datawindow.cpp" "CMakeFiles/ServerUI.dir/datawindow.cpp.o" "gcc" "CMakeFiles/ServerUI.dir/datawindow.cpp.o.d"
   "/home/vboxuser/test/MonitoringSys/Server/ServerUI/main.cpp" "CMakeFiles/ServerUI.dir/main.cpp.o" "gcc" "CMakeFiles/ServerUI.dir/main.cpp.o.d"
   "/home/vboxuser/test/MonitoringSys/Server/ServerUI/mainwindow.cpp" "CMakeFiles/ServerUI.dir/mainwindow.cpp.o" "gcc" "CMakeFiles/ServerUI.dir/mainwindow.cpp.o.d"
   )

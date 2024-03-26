@@ -4,6 +4,8 @@ file(REMOVE_RECURSE
   "ServerUI_autogen"
   "CMakeFiles/ServerUI.dir/ServerUI_autogen/mocs_compilation.cpp.o"
   "CMakeFiles/ServerUI.dir/ServerUI_autogen/mocs_compilation.cpp.o.d"
+  "CMakeFiles/ServerUI.dir/datawindow.cpp.o"
+  "CMakeFiles/ServerUI.dir/datawindow.cpp.o.d"
   "CMakeFiles/ServerUI.dir/main.cpp.o"
   "CMakeFiles/ServerUI.dir/main.cpp.o.d"
   "CMakeFiles/ServerUI.dir/mainwindow.cpp.o"
