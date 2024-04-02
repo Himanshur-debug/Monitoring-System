@@ -58,18 +58,7 @@ void Client::keyVerification() {
 
 void Client::sysInfo() {
     try {
-        json message_json;
-        message_json["status"] = "1";
-        message_json["hostname"] = getHostname();
-        message_json["macAddress"] = getmacAddress();
-        message_json["ipAddress"] = getIPAddress();
-        message_json["cpu"] = std::to_string(getCPUUsage());
-        message_json["ram"] = std::to_string(getRAMUsage());
-        message_json["netstate"] = getNetworkStats();
-        message_json["hddUtilization"] = getHDDUtilization(); 
-        message_json["idleTime"] = std::to_string(getIdleTime()); 
-
-        std::string message = message_json.dump(); 
+        
         // boost::asio::write(socket, buffer(message), errorCode);
         size_t bytes_written = stream_.write(buffer(message), errorCode);
 

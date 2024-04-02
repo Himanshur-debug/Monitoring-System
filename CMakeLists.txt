@@ -36,6 +36,8 @@ target_link_libraries(${PROJECT_NAME}
 # sudo apt-get update
 # sudo apt-get install libmysqlclient-dev
 # sudo apt-get install qtbase5-dev qtbase5-dev-tools libqt5sql5 libqt5sql5-mysql
+# sudo apt-get install libqt5charts5-dev
+
 
 # dpkg -l | grep mysql-server
 # sudo find / -name mysql

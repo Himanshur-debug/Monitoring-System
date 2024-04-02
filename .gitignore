@@ -14,8 +14,6 @@
 # Ignore build directories
 build/
 dist/
-Client/build-ClientUI-Desktop-Debug/
-Server/build-ServerUI-Desktop-Debug/
 
 .vscode/
 

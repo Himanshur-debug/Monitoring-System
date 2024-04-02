@@ -11,8 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Sql REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Sql REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Sql Charts REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Sql Charts REQUIRED)
 
 
 set(PROJECT_SOURCES
@@ -22,6 +22,8 @@ set(PROJECT_SOURCES
         mainwindow.ui
         datawindow.cpp
         datawindow.h
+        graphwindow.cpp
+        graphwindow.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -47,7 +49,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(ServerUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Sql)
+target_link_libraries(ServerUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Sql Qt${QT_VERSION_MAJOR}::Charts)
 
 set_target_properties(ServerUI PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

@@ -22,9 +22,11 @@ private:
     QSqlTableModel *model;
     QPushButton *buttonClient_details;
     QPushButton *buttonSystem_Info;
+    QPushButton *buttonGraph;
     QSqlDatabase db;
     void setupUi();
     void fetchData(const QString &tableName);
+    void createGraph();
 };
 
 #endif

@@ -58,6 +58,8 @@ void MainWindow::setupUi() {
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
 
+    setWindowTitle("ServerUI: Main Window");
+
     serverButton = new QPushButton("Start Server", centralWidget);
     dataWindowButton = new QPushButton("Fetch Data", this);
     outputTextEdit = new QTextEdit(centralWidget);

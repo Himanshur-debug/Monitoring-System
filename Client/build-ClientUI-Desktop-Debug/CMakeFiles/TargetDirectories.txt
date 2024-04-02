@@ -1,0 +1,4 @@
+/home/vboxuser/test/MonitoringSys/Client/build-ClientUI-Desktop-Debug/CMakeFiles/ClientUI.dir
+/home/vboxuser/test/MonitoringSys/Client/build-ClientUI-Desktop-Debug/CMakeFiles/edit_cache.dir
+/home/vboxuser/test/MonitoringSys/Client/build-ClientUI-Desktop-Debug/CMakeFiles/rebuild_cache.dir
+/home/vboxuser/test/MonitoringSys/Client/build-ClientUI-Desktop-Debug/CMakeFiles/ClientUI_autogen.dir
