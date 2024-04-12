@@ -6,25 +6,64 @@
 
 #include <QDebug>
 
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
 #include <QtCharts>
 
 using namespace QtCharts;
 
 DataWindow::DataWindow(QWidget *parent) : QMainWindow(parent) {
+
+    dbConnect();
+    this->resize(500, 400);
+    setupUi();
+}
+
+void DataWindow::dbConnect() {
+    QFile configFile("config.json");
+    if (!configFile.open(QIODevice::ReadOnly)) {
+        QMessageBox::critical(this, "Error", "Failed to open config.json");
+        return;
+    }
+
+    QJsonParseError parseError;
+    QJsonDocument configDoc = QJsonDocument::fromJson(configFile.readAll(), &parseError);
+    configFile.close();
+
+    if (parseError.error != QJsonParseError::NoError) {
+        QMessageBox::critical(this, "Error", "Error parsing config.json: " + parseError.errorString());
+        return;
+    }
+
+    QJsonArray configArray = configDoc.array();
+    if (configArray.size() < 2) {
+        QMessageBox::critical(this, "Error", "Invalid config.json: Array size less than expected");
+        return;
+    }
+
+    QJsonObject dbConfigObj = configArray[0].toObject();
+
+    QString dbAddress = dbConfigObj["dbAddress"].toString();
+    QString dbUser = dbConfigObj["dbUser"].toString();
+    QString dbName = dbConfigObj["dbName"].toString();
+    QString dbPassword = dbConfigObj["dbPassword"].toString();
+
+    // Set up QSqlDatabase using the configuration values
     db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName("localhost");
-    db.setDatabaseName("Sysmonitor");
-    db.setUserName("root");
-    db.setPassword("hello World @123");
+    db.setHostName(dbAddress.split(":").first());
+    db.setPort(dbAddress.split(":").last().toInt());
+    db.setDatabaseName(dbName);
+    db.setUserName(dbUser);
+    db.setPassword(dbPassword);
 
     if (!db.open()) {
         QMessageBox::critical(this, "Error", "Could not open database");
         return;
     }
-    this->resize(500, 400);
-    setupUi();
 }
-
 DataWindow::~DataWindow() {
     delete tableView;
     delete model;

@@ -13,8 +13,8 @@ MainWindow::~MainWindow() {
 
 void MainWindow::Client() {
     if (clientProcess->state() == QProcess::NotRunning) {
-        clientProcess->setWorkingDirectory("/home/vboxuser/test/MonitoringSys/build/Client");
-        clientProcess->start("/home/vboxuser/test/MonitoringSys/build/Client/Client");
+//        clientProcess->setWorkingDirectory("/home/vboxuser/test/MonitoringSys/build/Client");
+        clientProcess->start("./Client");
         if (clientProcess->state() == QProcess::NotRunning) {
             qDebug() << "Failed to start Client";
         } else {

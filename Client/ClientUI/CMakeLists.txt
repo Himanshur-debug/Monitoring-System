@@ -57,3 +57,14 @@ set_target_properties(ClientUI PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ClientUI)
 endif()
+
+
+
+set(CONFIG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../)
+configure_file(${CONFIG_DIR}/config.json ${CMAKE_CURRENT_BINARY_DIR}/config.json COPYONLY)
+
+set(CERTIFICATE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../Certificates)
+configure_file(${CERTIFICATE_DIR}/server.crt ${CMAKE_CURRENT_BINARY_DIR}/server.crt COPYONLY)
+
+set(CLIENT_EXECUTABLE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../build/Client)
+configure_file(${CLIENT_EXECUTABLE_DIR}/Client ${CMAKE_CURRENT_BINARY_DIR}/Client COPYONLY)

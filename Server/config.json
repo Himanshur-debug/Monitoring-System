@@ -2,9 +2,11 @@
     {
         "dbAddress": "127.0.0.1:3306",
         "dbUser": "root",
+        "dbName": "Sysmonitor",
         "dbPassword": "hello World @123"
     },
     {
-        "authKey": "hello"
+        "authKey": "hello",
+        "port": 8080
     }
 ]

@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD 23)
 find_package(OpenSSL REQUIRED)
 
 file(GLOB SOURCES src/* src/*/* src/*/*/*)
-# add_library(${PROJECT_NAME} ${SOURCES})
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
@@ -30,3 +29,7 @@ target_link_libraries(${PROJECT_NAME}
 
 set(CONFIG_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 configure_file(${CONFIG_DIR}/config.json ${CMAKE_CURRENT_BINARY_DIR}/config.json COPYONLY)
+
+set(CERTIFICATE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../Certificates)
+configure_file(${CERTIFICATE_DIR}/server.crt ${CMAKE_CURRENT_BINARY_DIR}/server.crt COPYONLY)
+configure_file(${CERTIFICATE_DIR}/server.key ${CMAKE_CURRENT_BINARY_DIR}/server.key COPYONLY)

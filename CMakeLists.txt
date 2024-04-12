@@ -5,10 +5,6 @@ project(Client VERSION 0.0.1 LANGUAGES CXX)
 find_package(Boost 1.80.0 REQUIRED)
 find_package(OpenSSL REQUIRED)
 
-set(CERTIFICATE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Certificates)
-add_definitions(-DserverCrt="${CERTIFICATE_DIR}/server.crt")
-add_definitions(-DserverKey="${CERTIFICATE_DIR}/server.key")
-
 add_subdirectory(Server)
 add_subdirectory(Client)
 

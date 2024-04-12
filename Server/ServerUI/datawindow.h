@@ -24,6 +24,8 @@ private:
     QPushButton *buttonSystem_Info;
     QPushButton *buttonGraph;
     QSqlDatabase db;
+
+    void dbConnect();
     void setupUi();
     void fetchData(const QString &tableName);
     void createGraph();

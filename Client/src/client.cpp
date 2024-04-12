@@ -18,7 +18,7 @@ void Client::initialize(const std::string &ip, const std::string &port, const st
     reconnectAttempts_ = 0;
 
     ctx_ = ssl::context {ssl::context::tlsv12_server};
-    ctx_.load_verify_file(serverCrt);
+    ctx_.load_verify_file("server.crt");
     ctx_.set_verify_mode(ssl::verify_peer);
 }
 

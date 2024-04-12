@@ -28,7 +28,7 @@ class Server {
 
     public:
         static void signalHandler(int signal);
-        Server(io_context& io_context_, std::string conKey, DatabaseInitializer dbInitializer);
+        Server(io_context& io_context_, std::string conKey, int port, DatabaseInitializer dbInitializer);
         void accept_();
 };
 

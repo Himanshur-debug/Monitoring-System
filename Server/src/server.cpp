@@ -12,8 +12,8 @@ void Server::signalHandler(int signal) {
     }
 }
 
-Server::Server(io_context& io_context_, std::string conKey, DatabaseInitializer dbInitializer): ConnectionKey_(conKey),
-    dbInitializer_(dbInitializer), context_(ssl::context::tlsv12), acceptor_(io_context_, tcp::endpoint(tcp::v4(), 8080)) {
+Server::Server(io_context& io_context_, std::string conKey, int port, DatabaseInitializer dbInitializer): ConnectionKey_(conKey),
+    dbInitializer_(dbInitializer), context_(ssl::context::tlsv12), acceptor_(io_context_, tcp::endpoint(tcp::v4(), port)) {
 
     try {
         context_.set_options(ssl::context::default_workarounds |
@@ -26,12 +26,12 @@ Server::Server(io_context& io_context_, std::string conKey, DatabaseInitializer 
         context_.set_password_callback([](std::size_t max_length, ssl::context::password_purpose purpose) {
             return "password"; // Set your certificate password here
         });
-        context_.use_certificate_chain_file(serverCrt);
-        context_.use_private_key_file(serverKey, ssl::context::pem);
+        context_.use_certificate_chain_file("server.crt");
+        context_.use_private_key_file("server.key", ssl::context::pem);
 
         // Verify the certificate
         context_.set_verify_mode(ssl::verify_peer); // | ssl::verify_fail_if_no_peer_cert);
-        context_.load_verify_file(serverCrt); // Set your CA certificate path here
+        context_.load_verify_file("server.crt"); // Set your CA certificate path here
 
         // Debugging output
         context_.set_verify_callback(

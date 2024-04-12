@@ -18,8 +18,8 @@ MainWindow::~MainWindow() {
 
 void MainWindow::Server() {
         if (serverProcess->state() == QProcess::NotRunning) {
-            serverProcess->setWorkingDirectory("/home/vboxuser/test/MonitoringSys/build/Server");
-            serverProcess->start("/home/vboxuser/test/MonitoringSys/build/Server/Server");
+//            serverProcess->setWorkingDirectory("/home/vboxuser/test/MonitoringSys/build/Server");
+            serverProcess->start("./Server");
             if (serverProcess->state() == QProcess::NotRunning) {
                 qDebug() << "Failed to start server";
             } else {

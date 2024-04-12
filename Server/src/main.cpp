@@ -22,9 +22,11 @@ struct DBConfig {
 };
 struct AuthConfig {
     std::string key_;
+    int port_;
 
     AuthConfig& operator=(const json& j) {
         key_ = j.at("authKey").get<std::string>();
+        port_ = j.at("port").get<int>();
         return *this;
     }
 };
@@ -38,6 +40,7 @@ int main() {
         }
         json configJson;
         configFile >> configJson;
+        configFile.close();
 
         DBConfig dbConfig;
         dbConfig = configJson[0];
@@ -49,7 +52,7 @@ int main() {
         DatabaseInitializer dbInitializer(dbConfig.dbAddress_, dbConfig.dbUser_, dbConfig.dbPassword_);
         dbInitializer.initializeDatabase();
 
-        Server server(ioc_, authConfig.key_, dbInitializer);
+        Server server(ioc_, authConfig.key_, authConfig.port_, dbInitializer);
         ioc_.run();
     }
     catch(const std::exception& e) {
