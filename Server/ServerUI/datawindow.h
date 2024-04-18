@@ -12,7 +12,7 @@ class DataWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit DataWindow(QWidget *parent = nullptr);
+    explicit DataWindow(QWidget *parent = nullptr, QSqlDatabase *db=nullptr);
     ~DataWindow();
 
 private slots:
@@ -23,7 +23,7 @@ private:
     QPushButton *buttonClient_details;
     QPushButton *buttonSystem_Info;
     QPushButton *buttonGraph;
-    QSqlDatabase db;
+    QSqlDatabase *db;
 
     void dbConnect();
     void setupUi();

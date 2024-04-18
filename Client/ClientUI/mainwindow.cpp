@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QVBoxLayout>
 #include <QRegularExpression>
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), clientProcess(new QProcess(this)) {
     this->resize(400, 300);
@@ -13,11 +14,11 @@ MainWindow::~MainWindow() {
 
 void MainWindow::Client() {
     if (clientProcess->state() == QProcess::NotRunning) {
-//        clientProcess->setWorkingDirectory("/home/vboxuser/test/MonitoringSys/build/Client");
         clientProcess->start("./Client");
         if (clientProcess->state() == QProcess::NotRunning) {
             qDebug() << "Failed to start Client";
         } else {
+            emit sendInput();
             qDebug() << "Client started successfully";
         }
         clientButton->setText("Stop Client");
@@ -37,6 +38,18 @@ void MainWindow::updateClientButtonText(int exitCode, QProcess::ExitStatus exitS
     clientButton->setText("Start Client");
 
 }
+
+void MainWindow::sendInputToClient() {
+    bool ok;
+    QString inputText = QInputDialog::getText(this, tr("Configuration File"), tr("Input Configuration file path:"), QLineEdit::Normal, "", &ok).trimmed();
+    if (ok && !inputText.isEmpty()) {
+        clientProcess->write(inputText.toUtf8()+'\n');
+        clientProcess->waitForBytesWritten();
+    } else {
+        Client();
+    }
+}
+
 
 void MainWindow::setupUi() {
     QWidget *centralWidget = new QWidget(this);
@@ -59,6 +72,9 @@ void MainWindow::setupUi() {
     connect(clientProcess, &QProcess::errorOccurred, [this](QProcess::ProcessError error) {
         qDebug() << "Client started successfully" << error ;
     });
+
+    // Connect the new slot to get input from the message box and send it to the server
+    connect(this, &MainWindow::sendInput, this, &MainWindow::sendInputToClient);
 
     this->setCentralWidget(centralWidget);
 }

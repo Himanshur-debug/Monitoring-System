@@ -17,7 +17,10 @@ public:
 private slots:
     void Client();
     void updateClientButtonText(int exitCode, QProcess::ExitStatus exitStatus);
+    void sendInputToClient();
 
+signals:
+    void sendInput();
 
 private:
     QPushButton *clientButton;

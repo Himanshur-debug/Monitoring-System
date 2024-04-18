@@ -8,5 +8,9 @@
     {
         "authKey": "hello",
         "port": 8080
+    },
+    {
+        "serverCrt": "/home/vboxuser/test/MonitoringSys/Certificates/server.crt",
+        "serverKey": "/home/vboxuser/test/MonitoringSys/Certificates/server.key"
     }
 ]

@@ -18,11 +18,25 @@ struct ServerConfig {
     }
     
 };
+
+struct CertificateConfig {
+    std::string serverCrt_;
+
+    CertificateConfig& operator=(const json& j) {
+        serverCrt_ = j.at("serverCrt").get<std::string>();
+        return *this;
+    }
+};
  
 int main() { 
     try {
+        std::cin.clear();
+        fflush(stdin);
+        std::string config;
+        std::cin >> config;
+
         // reading configuration file config.json
-        std::ifstream configFile("config.json");
+        std::ifstream configFile(config);
         if (!configFile.is_open()) {
             throw std::runtime_error("Failed to open Configuration file");
         }
@@ -31,9 +45,11 @@ int main() {
 
         ServerConfig serverConfig;
         serverConfig = configJson[0];
+        CertificateConfig certConfig;
+        certConfig = configJson[1];
 
         Client* client = Client::getInstance();
-        client->initialize(serverConfig.serverIP_, serverConfig.serverPort_, serverConfig.authKey_);
+        client->initialize(serverConfig.serverIP_, serverConfig.serverPort_, serverConfig.authKey_, certConfig.serverCrt_);
         client->run();
     }
     catch(const std::exception& e) {

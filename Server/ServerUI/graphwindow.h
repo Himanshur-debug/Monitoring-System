@@ -18,7 +18,7 @@ class GraphWindow: public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit GraphWindow(QSqlDatabase db, QWidget *parent = nullptr);
+    explicit GraphWindow(QSqlDatabase *db, QWidget *parent = nullptr);
     ~GraphWindow();
 
 private slots:
@@ -29,7 +29,7 @@ private:
     void fetchData(const QString &userId);
     void drawGraph(const QString &userId);
 
-    QSqlDatabase db;
+    QSqlDatabase *db;
     QSqlQuery query;
     QLineSeries *cpuSeries;
     QLineSeries *ramSeries;

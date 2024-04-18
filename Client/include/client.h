@@ -41,17 +41,20 @@ class Client {
 
         Client(): ctx_(ssl::context::tlsv12_client), stream_(ioc_, ctx_){};
         void handleError(const boost::system::error_code& ec, const std::string& errorMessage);
+
+        void connect();
+        void keyVerification();
+        void sysInfo();
+        void receiveResponse();
+        void disconnect();
+
         ~Client();
     public:
         Client(const Client&) = delete;
         void operator=(const Client&) = delete;
 
         static Client* getInstance();
-        void initialize(const std::string &ip, const std::string &port, const std::string &conKey);
-        void connect();
-        void keyVerification();
-        void sysInfo();
-        void receiveResponse();
-        void disconnect();
+        void initialize(const std::string &ip, const std::string &port, const std::string &conKey, const std::string &serverCrt);
+        
         void run();
 };

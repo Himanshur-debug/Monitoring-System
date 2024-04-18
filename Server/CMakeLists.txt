@@ -26,10 +26,3 @@ target_link_libraries(${PROJECT_NAME}
         mysqlcppconn
     PRIVATE
 )
-
-set(CONFIG_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-configure_file(${CONFIG_DIR}/config.json ${CMAKE_CURRENT_BINARY_DIR}/config.json COPYONLY)
-
-set(CERTIFICATE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../Certificates)
-configure_file(${CERTIFICATE_DIR}/server.crt ${CMAKE_CURRENT_BINARY_DIR}/server.crt COPYONLY)
-configure_file(${CERTIFICATE_DIR}/server.key ${CMAKE_CURRENT_BINARY_DIR}/server.key COPYONLY)

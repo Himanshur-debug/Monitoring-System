@@ -4,13 +4,14 @@
 #include <QSqlError>
 
 
-GraphWindow::GraphWindow(QSqlDatabase db, QWidget *parent): QMainWindow(parent), db(db), query(db) {
+GraphWindow::GraphWindow(QSqlDatabase *db, QWidget *parent): QMainWindow(parent), db(db), query(*db) {
     this->resize(400, 400);
     setupUi();
 }
 
 GraphWindow::~GraphWindow()
 {
+    delete db;
     delete cpuSeries;
     delete ramSeries;
     delete hddSeries;
@@ -31,7 +32,7 @@ void GraphWindow::setupUi()
 
     QLabel *macAddressLabel = new QLabel("Mac Address:", this);
     macAddressInput = new QLineEdit(centralWidget);
-    drawButton = new QPushButton("Draw Graph", centralWidget);
+    drawButton = new QPushButton("Resource Usages Graph", centralWidget);
 
     inputLayout = new QHBoxLayout();
     inputLayout->addWidget(macAddressLabel);
