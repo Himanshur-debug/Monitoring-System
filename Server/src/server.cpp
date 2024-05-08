@@ -52,7 +52,7 @@ Server::Server(io_context& io_context_, const std::string &conKey, int port, Dat
         accept_();
 
     } catch (const std::exception& e) {
-        std::cerr << "SSL context setup error: " << e.what() << std::endl;
+        std::cout << "SSL context setup error: " << e.what() << std::endl;
         throw;
     }
 
@@ -75,21 +75,21 @@ void Server::accept_() {
         );
     }
     catch(const std::exception& e) {
-        std::cerr << "Exception in accepting client: " << e.what() << std::endl;
-        // Continue accepting even after exception
-        //accept_();
+        std::cout << "Exception in accepting client: " << e.what() << std::endl;
     }
     
 }
 
 ClientSession::ClientSession(io_context& io_context, ssl::context& context, std::string conKey, DatabaseInitializer dbInitializer)
-        : ConnectionKey_(conKey), dbInitializer_(dbInitializer), wsStream_(std::make_unique<websocket::stream<ssl::stream<ip::tcp::socket>>>(io_context, context)) {}
+        : ConnectionKey_(conKey), dbInitializer_(dbInitializer), 
+        wsStream_(std::make_unique<websocket::stream<ssl::stream<ip::tcp::socket>>>(io_context, context)), 
+        timeOut(std::make_unique<boost::asio::steady_timer>(io_context)) {}
 
 void ClientSession::start() {
     wsStream_->next_layer().async_handshake(ssl::stream_base::server,
         [this, self = shared_from_this()](const boost::system::error_code& error) {
             if (!error) {
-                std::cout << "SSL handshake succeeded." << std::endl;
+                std::cout << "SSL handshake succeeded." << wsStream_->next_layer().lowest_layer().remote_endpoint() << std::endl;
 
                 wsStream_->async_accept(
                     [this, self = shared_from_this()](const boost::system::error_code& ec) {
@@ -116,16 +116,29 @@ void ClientSession::verifyClient() {
             if (!ec) {
                 
                 std::string receivedKey(beast::buffers_to_string(buffer_.data()));
+                json conKeyError_json;
                 // std::cout<<receivedKey<<receivedKey.size()<<std::endl;
                 if (receivedKey == ConnectionKey_) {
+                    conKeyError_json["status"] = "1";
+                    conKeyError_json["message"] = "Success";
                     std::cout << " \n \nConnection key is valid. Client is authorized.\n" << std::endl;
 
                     receiveData();
                 } else {
-                    char errorResponse[256] = "Invalid connection key.....retry!!!";
+                    conKeyError_json["status"] = "-1";
+                    conKeyError_json["message"] = "Invalid connection key.....reconnect!!!";
                     std::cout<<"Invalid connection key"<<std::endl;
-                    return ;
+                    // return ;
                 }
+
+                std::string conKey_message = conKeyError_json.dump();
+                wsStream_->async_write(boost::asio::buffer(conKey_message),
+                    [this](boost::system::error_code ec, std::size_t /*bytes_transferred*/) {
+                        // if (ec) {
+                        //     handleError(ec, "Error sending connection key warning message: ");
+                        // }
+                });
+                if(conKeyError_json["status"] == "-1")  return;
             } else {
                 handleError(ec, "Error reading connection key: ");
             }
@@ -133,12 +146,38 @@ void ClientSession::verifyClient() {
     );
 }
 
+void ClientSession::handleTimeout(const boost::system::error_code& ec) {
+    if (!ec) {
+        // Send warning message to client
+        json warning_json;
+        warning_json["status"] = "-1";
+        warning_json["message"] = "Server is not able to receive any message.";
+        std::string warning_message = warning_json.dump();
+        
+        wsStream_->async_write(boost::asio::buffer(warning_message),
+            [this](boost::system::error_code ec, std::size_t /*bytes_transferred*/) {
+                if (ec) {
+                    handleError(ec, "Error sending warning message: ");
+                } else {
+                    std::cerr << "Warning message sent: " << ec.message() << std::endl;
+                }
+                // Restart the timer
+                timeOut->expires_after(std::chrono::seconds(8));
+                timeOut->async_wait([this, self = shared_from_this()](const boost::system::error_code& ec) { handleTimeout(ec); });
+        });
+    }
+}
 void ClientSession::receiveData() {
-    while(true) {
+    while(true) {        
+
+        timeOut->expires_after(std::chrono::seconds(8));
+        timeOut->async_wait([this, self = shared_from_this()](const boost::system::error_code& ec) { handleTimeout(ec); });
+        
         char received_data[1024]; 
         
         wsStream_->async_read_some(buffer(received_data),
             [this, self = shared_from_this(), &received_data](boost::system::error_code ec, std::size_t bytes_transferred) {
+                timeOut->cancel();
                 if(!ec) {
                     std::string received_message(received_data, bytes_transferred);
 
@@ -150,7 +189,7 @@ void ClientSession::receiveData() {
                     if(received_json["status"] == "0") {
                         wsStream_->close(websocket::close_code::normal, error_code);
                         if (error_code){
-                            std::cerr << "Error while closing websocket Connection: " << error_code.message() << std::endl;
+                            std::cout << "Error while closing websocket Connection: " << error_code.message() << std::endl;
                         }        
                         std::cout << "client disconnected." << std::endl;
                         return ;
@@ -179,21 +218,17 @@ void ClientSession::receiveData() {
 
                     // Create JSON to send back
                     json reply_json;
-                    reply_json["status"] = "OK";
+                    reply_json["status"] = "1";
                     reply_json["message"] = "Received message successfully";
                     
                     if (std::stod(cpu) > 70.0) {
-                        // Create alert message
-                        reply_json["status"] = "ALERT";
                         reply_json["message"] = reply_json["message"].get<std::string>() + "\nCPU usage exceeds 70%.";
 
                     }
                     if (std::stod(ram) > 70.0){
-                        reply_json["status"] = "ALERT";
                         reply_json["message"] = reply_json["message"].get<std::string>() + "\nRAM usage exceeds 70%.";
                     }
                     if (std::stod(hddUtilization) > 70.0){
-                        reply_json["status"] = "ALERT";
                         reply_json["message"] = reply_json["message"].get<std::string>() + "\nHDD utilization exceeds 70%.";
                     }
                     
@@ -204,7 +239,7 @@ void ClientSession::receiveData() {
                             if (ec) {
                                 handleError(ec, "Error sending reply message: ");
                             } else {
-                                std::cerr << " reply message sent: " << ec.message() << std::endl;
+                                std::cout << " reply message sent: " << ec.message() << std::endl;
                                 receiveData();
                             }
                     });
@@ -221,6 +256,6 @@ void ClientSession::handleError(const boost::system::error_code& ec, const std::
     if (ec == boost::asio::error::eof || ec == boost::asio::ssl::error::stream_truncated) {
         std::cout << "Client disconnected." << std::endl;
     } else {
-        std::cerr << errorMessage<< ec.message() << std::endl;
+        std::cout << errorMessage<< ec.message() << std::endl;
     }
 }

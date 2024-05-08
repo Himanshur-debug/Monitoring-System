@@ -24,6 +24,7 @@ void Client::initialize(const std::string &ip, const std::string &port, const st
 
 void Client::connect() {
     try {
+        std::cout<<"Connection status: "<<std::endl;
         tcp::resolver resolver(ioc_);
         auto results = resolver.resolve(serverIP_, port_);
 
@@ -31,9 +32,11 @@ void Client::connect() {
 
         // Handshake with SSL
         stream_.next_layer().handshake(ssl::stream_base::client);
+        std::cout<<"SSL Handshake: Success"<<std::endl;
         
         // Handshake with WebSocket
         stream_.handshake(serverIP_, "/");
+        std::cout<<"Websocket Handshake: Success "<<std::endl;
     } catch (const std::exception& e) {
         //std::cerr << "Connect Exception: " << e.what() << std::endl;
         throw; // Re-throw the exception to propagate it further if needed
@@ -45,15 +48,29 @@ void Client::keyVerification() {
     size_t bytes_written = stream_.write(boost::asio::buffer(ConnectionKey_), errorCode);
 
     if (errorCode) { 
-        if (errorCode) {
-            handleError(errorCode, "Error sending connection key to the server: ");
-            //std::cerr << "Error sending connection key to the server: " << errorCode.message() << std::endl;
-        } else {
-            std::cout << "Sent connection key to the server \n" << std::endl;
-        }
+        handleError(errorCode, "Error sending connection key to the server: ");
+        //std::cerr << "Error sending connection key to the server: " << errorCode.message() << std::endl;
     } else {
-        std::cout << "Sent connection key to the server \n" << std::endl;
+        
+        char response[1024]; 
+        size_t response_length = stream_.read_some(buffer(response), errorCode); 
+        if (errorCode) { 
+            handleError(errorCode, "Error receiving message from server!!!!!: ");
+            //std::cerr << "Error receiving message from server!!!!!: " << errorCode.message() << std::endl; 
+        } else { 
+            std::string received_message(response, response_length);
+            // Parse JSON
+            json received_json = json::parse(received_message);
+            std::string status = received_json["status"];
+            if(status == "-1") {
+                std::cout << "Verifying Connection key: Failed" << std::endl;
+                exit(0);
+            } else {
+                std::cout << "Verifying Connection key: Success" << std::endl;   
+            }
+        }
     }
+    
 }
 
 void Client::sysInfo() {
@@ -97,7 +114,7 @@ void Client::receiveResponse() {
             // Parse JSON
             json received_json = json::parse(received_message);
             std::string message = received_json["message"];
-            std::cout << message<< std::endl; 
+            std::cout << message << std::endl; 
         }
     }
     catch(const std::exception& e) {
@@ -110,6 +127,7 @@ void Client::run() {
     {
         connect();
         keyVerification();
+        
         while (shouldRun_)    //
         {
             sysInfo();

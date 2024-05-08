@@ -1,3 +1,6 @@
+# This file is used to ignore files which are generated
+# ----------------------------------------------------------------------------
+
 # Compiled object files
 *.o
 *.obj
@@ -18,9 +21,6 @@ Client/build-ClientUI-Desktop-Debug/
 Server/build-ServerUI-Desktop-Debug/
 
 .vscode/
-
-# This file is used to ignore files which are generated
-# ----------------------------------------------------------------------------
 
 *~
 *.autosave

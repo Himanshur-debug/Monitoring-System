@@ -17,16 +17,19 @@ public:
 private slots:
     void Client();
     void updateClientButtonText(int exitCode, QProcess::ExitStatus exitStatus);
-    void sendInputToClient();
+//    void sendInputToClient();
 
 signals:
     void sendInput();
 
 private:
+    QString configFilePath;
     QPushButton *clientButton;
     QProcess *clientProcess;
     QTextEdit *outputTextEdit;
     void setupUi();
+    void setConfigFilePath();
+    void sendConfigFilePathToClient();
 };
 
 #endif // MAINWINDOW_H

@@ -2,14 +2,35 @@
 #include <QVBoxLayout>
 #include <QRegularExpression>
 #include <QInputDialog>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), clientProcess(new QProcess(this)) {
+    setConfigFilePath();
     this->resize(400, 300);
     setupUi();
+
 }
 
 MainWindow::~MainWindow() {
     delete clientProcess;
+}
+
+void MainWindow::setConfigFilePath() {
+    bool ok;
+    configFilePath = QInputDialog::getText(this, tr("Configuration File"), tr("Input Configuration file path:"), QLineEdit::Normal, "", &ok).trimmed();
+    if (ok && !configFilePath.isEmpty()) {
+        return;
+    }
+    else if (ok && configFilePath.isEmpty()) {
+        QMessageBox::critical(this, "Error", "empty path!!! Retry...");
+        close();
+        exit(0);
+
+    }
+    else {
+        close();
+        exit(0);
+   }
 }
 
 void MainWindow::Client() {
@@ -36,20 +57,12 @@ void MainWindow::updateClientButtonText(int exitCode, QProcess::ExitStatus exitS
 //    }
     outputTextEdit->insertPlainText("\n......Client STOPPED");
     clientButton->setText("Start Client");
-
 }
 
-void MainWindow::sendInputToClient() {
-    bool ok;
-    QString inputText = QInputDialog::getText(this, tr("Configuration File"), tr("Input Configuration file path:"), QLineEdit::Normal, "", &ok).trimmed();
-    if (ok && !inputText.isEmpty()) {
-        clientProcess->write(inputText.toUtf8()+'\n');
-        clientProcess->waitForBytesWritten();
-    } else {
-        Client();
-    }
+void MainWindow::sendConfigFilePathToClient() {
+    clientProcess->write(configFilePath.toUtf8()+'\n');
+    clientProcess->waitForBytesWritten();
 }
-
 
 void MainWindow::setupUi() {
     QWidget *centralWidget = new QWidget(this);
@@ -74,7 +87,15 @@ void MainWindow::setupUi() {
     });
 
     // Connect the new slot to get input from the message box and send it to the server
-    connect(this, &MainWindow::sendInput, this, &MainWindow::sendInputToClient);
+    connect(this, &MainWindow::sendInput, this, &MainWindow::sendConfigFilePathToClient);
+
+    connect(clientProcess, &QProcess::readyReadStandardError, [&]() {
+            // Read the standard error output and append it to the QTextEdit
+            QByteArray errorOutput = clientProcess->readAllStandardError();
+            QMessageBox::critical(this, "Error", QString::fromUtf8(errorOutput));
+            setConfigFilePath();
+        }
+    );
 
     this->setCentralWidget(centralWidget);
 }

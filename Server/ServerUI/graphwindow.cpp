@@ -32,7 +32,10 @@ void GraphWindow::setupUi()
 
     QLabel *macAddressLabel = new QLabel("Mac Address:", this);
     macAddressInput = new QLineEdit(centralWidget);
-    drawButton = new QPushButton("Resource Usages Graph", centralWidget);
+    macAddressInput->setPlaceholderText(" Mac Address ");
+
+    QComboBox *macDropDown = new QComboBox(centralWidget);
+    drawButton = new QPushButton("Get Resource Usages Graph", centralWidget);
 
     inputLayout = new QHBoxLayout();
     inputLayout->addWidget(macAddressLabel);
