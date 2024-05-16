@@ -36,6 +36,7 @@ class Client {
         websocket::stream<beast::ssl_stream<tcp::socket>> stream_;
         boost::system::error_code errorCode;
         // beast::flat_buffer buffer_;
+        std::string responseData;
         bool shouldRun_;
         int reconnectAttempts_;
 
@@ -45,6 +46,7 @@ class Client {
         void connect();
         void keyVerification();
         void sysInfo();
+        void sendData();
         void receiveResponse();
         void disconnect();
 

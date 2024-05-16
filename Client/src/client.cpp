@@ -86,7 +86,24 @@ void Client::sysInfo() {
         message_json["hddUtilization"] = getHDDUtilization(); 
         message_json["idleTime"] = std::to_string(getIdleTime()); 
 
-        std::string message = message_json.dump(); 
+        responseData = message_json.dump(); 
+        // boost::asio::write(socket, buffer(message), errorCode);
+        // size_t bytes_written = stream_.write(buffer(message), errorCode);
+
+        // if(errorCode) {
+        //     handleError(errorCode, "Error in sending data: ");
+        //     //std::cerr << "Error in sending data: " << errorCode.message() << std::endl;
+        // } else {
+        //     std::cout << "sysinfo sent: " << errorCode.message() << std::endl;
+        // }
+    }
+    catch(const std::exception& e) {
+        std::cout << "Exception: " << e.what() << std::endl;
+    }
+}
+
+void Client::sendData() {
+    try {
         // boost::asio::write(socket, buffer(message), errorCode);
         size_t bytes_written = stream_.write(buffer(message), errorCode);
 
@@ -94,14 +111,13 @@ void Client::sysInfo() {
             handleError(errorCode, "Error in sending data: ");
             //std::cerr << "Error in sending data: " << errorCode.message() << std::endl;
         } else {
-            std::cerr << "sysinfo sent: " << errorCode.message() << std::endl;
+            std::cout << "sysinfo sent: " << errorCode.message() << std::endl;
         }
+    } catch(const std::exception& e) {
+        std::cout << "Exception: " << e.what() << std::endl;
     }
-    catch(const std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
-    }
-}
 
+}
 void Client::receiveResponse() {
     try {
         char response[1024]; 
@@ -113,12 +129,17 @@ void Client::receiveResponse() {
             std::string received_message(response, response_length);
             // Parse JSON
             json received_json = json::parse(received_message);
+            std::string status = received_message["status"];
+            if(status == "-1") {
+                std::cout << "Data is Not Reachable to Server....retrying again"<< std::endl; 
+                sendData();
+            }
             std::string message = received_json["message"];
             std::cout << message << std::endl; 
         }
     }
     catch(const std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
+        std::cout << "Exception: " << e.what() << std::endl;
     }
 }
 
@@ -131,6 +152,7 @@ void Client::run() {
         while (shouldRun_)    //
         {
             sysInfo();
+            sendData();
             receiveResponse();
             std::this_thread::sleep_for(std::chrono::seconds(5));
         }
@@ -139,8 +161,8 @@ void Client::run() {
     {
         std::cout<<" Server Not Responding!!!    Retrying..."<< std::endl;
         // std::cout<<flush;
-        std::cerr << "Exception: " << e.what() << std::endl;
-        std::cerr << "\nRetrying...." << std::endl;
+        // std::cout << "Exception: " << e.what() << std::endl;
+        std::cout << "\nRetrying...." << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(5));
         if (reconnectAttempts_ < 2 && shouldRun_==true)
         {
@@ -159,7 +181,7 @@ void Client::handleError(const boost::system::error_code& ec, const std::string&
         std::cout << "Connection disconnected From Server." << std::endl;
         shouldRun_ = false;
     } else {
-        std::cerr << errorMessage<< ec.message() << std::endl;
+        std::cout << errorMessage<< ec.message() << std::endl;
     }
 }
 void Client::disconnect() {

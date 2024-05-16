@@ -68,7 +68,7 @@ void Server::accept_() {
                 if (!error) {
                     new_clientSession->start();
                 } else {
-                    std::cerr << "Accept error: " << error.message() << std::endl;
+                    std::cout << "Accept error: " << error.message() << std::endl;
                 }
                 accept_();
             }
@@ -158,9 +158,9 @@ void ClientSession::handleTimeout(const boost::system::error_code& ec) {
             [this](boost::system::error_code ec, std::size_t /*bytes_transferred*/) {
                 if (ec) {
                     handleError(ec, "Error sending warning message: ");
-                } else {
-                    std::cerr << "Warning message sent: " << ec.message() << std::endl;
-                }
+                 } //else {
+                //     std::cout << "Warning message sent: " << ec.message() << std::endl;
+                // }
                 // Restart the timer
                 timeOut->expires_after(std::chrono::seconds(8));
                 timeOut->async_wait([this, self = shared_from_this()](const boost::system::error_code& ec) { handleTimeout(ec); });
