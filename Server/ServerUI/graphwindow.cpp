@@ -2,6 +2,7 @@
 #include <QInputDialog>
 #include <QDebug>
 #include <QSqlError>
+//#include <QSqlQuery>
 
 
 GraphWindow::GraphWindow(QSqlDatabase *db, QWidget *parent): QMainWindow(parent), db(db), query(*db) {
@@ -20,40 +21,49 @@ GraphWindow::~GraphWindow()
     delete mainLayout;
     delete inputLayout;
     delete drawButton;
-    delete macAddressInput;
+    delete comboBox;
 }
 
 void GraphWindow::setupUi()
 {
+    // Fetch MAC addresses from the database
+    QStringList macAddresses;
+    QString queryString = "SELECT mac_address FROM client_details;";
+    query.prepare(queryString);
+    query.exec();
+
+    while (query.next()) {
+        macAddresses.append(query.value(0).toString());
+    }
+
+    //set Layout
     QWidget *centralWidget = new QWidget(this);
     mainLayout = new QVBoxLayout(centralWidget);
-
     setWindowTitle("ServerUI: Graph Window");
 
+    QHBoxLayout *layout = new QHBoxLayout(centralWidget);
     QLabel *macAddressLabel = new QLabel("Mac Address:", this);
-    macAddressInput = new QLineEdit(centralWidget);
-    macAddressInput->setPlaceholderText(" Mac Address ");
+    comboBox = new QComboBox(centralWidget);
+    comboBox->addItems(macAddresses);
 
-    QComboBox *macDropDown = new QComboBox(centralWidget);
     drawButton = new QPushButton("Get Resource Usages Graph", centralWidget);
 
-    inputLayout = new QHBoxLayout();
-    inputLayout->addWidget(macAddressLabel);
-    inputLayout->addWidget(macAddressInput);
+    layout->addWidget(macAddressLabel);
+    layout->addWidget(comboBox);
 
-    mainLayout->addLayout(inputLayout);
+
+    mainLayout->addLayout(layout);
     mainLayout->addWidget(drawButton);
 
     this->setCentralWidget(centralWidget);
-
     connect(drawButton, &QPushButton::clicked, this, &GraphWindow::on_drawButton_clicked);
+
 }
 
-void GraphWindow::on_drawButton_clicked()
+void GraphWindow::on_drawButton_clicked(int index)
 {
-    QString macAddress = macAddressInput->text();
-
-    fetchData(macAddress);// columns);
+    QString macAddress = comboBox->currentText();
+    fetchData(macAddress);
 }
 
 void GraphWindow::fetchData(const QString &macAddress) {
@@ -63,7 +73,6 @@ void GraphWindow::fetchData(const QString &macAddress) {
     query.addBindValue(macAddress);
 
     if (!query.exec() || !query.next()) {
-//        qDebug() << query.lastError().text();
         QMessageBox::critical(this, "Error", "No MAC address Found. \nFailed to fetch data.");
         return;
     }

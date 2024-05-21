@@ -105,33 +105,43 @@ void Client::sysInfo() {
 void Client::sendData() {
     try {
         // boost::asio::write(socket, buffer(message), errorCode);
-        size_t bytes_written = stream_.write(buffer(message), errorCode);
+        size_t bytes_written = stream_.write(buffer(responseData), errorCode);
 
         if(errorCode) {
             handleError(errorCode, "Error in sending data: ");
+            std::string log_message = "Failed: Error in sending data";
+            createLog(log_message);
             //std::cerr << "Error in sending data: " << errorCode.message() << std::endl;
         } else {
-            std::cout << "sysinfo sent: " << errorCode.message() << std::endl;
+            std::cout << "System Information sent: " << errorCode.message() << std::endl;
+            std::string log_message = "success";
+            createLog(log_message);
         }
     } catch(const std::exception& e) {
         std::cout << "Exception: " << e.what() << std::endl;
     }
 
 }
+
 void Client::receiveResponse() {
     try {
         char response[1024]; 
         size_t response_length = stream_.read_some(buffer(response), errorCode); 
         if (errorCode) { 
             handleError(errorCode, "Error receiving message from server!!!!!: ");
+            
+            std::string log_message = "error: no feedback from server";
+            createLog(log_message);
             //std::cerr << "Error receiving message from server!!!!!: " << errorCode.message() << std::endl; 
         } else { 
             std::string received_message(response, response_length);
             // Parse JSON
             json received_json = json::parse(received_message);
-            std::string status = received_message["status"];
+            std::string status = received_json["status"];
             if(status == "-1") {
                 std::cout << "Data is Not Reachable to Server....retrying again"<< std::endl; 
+                std::string log_message = "error: data is not reachable to Server";
+                createLog(log_message); 
                 sendData();
             }
             std::string message = received_json["message"];
@@ -184,6 +194,22 @@ void Client::handleError(const boost::system::error_code& ec, const std::string&
         std::cout << errorMessage<< ec.message() << std::endl;
     }
 }
+
+void Client::createLog(const std::string& log_message) {
+    try {
+        std::ofstream file("client_log.txt", std::ios_base::app);
+        if (file.is_open()) {
+            file << log_message << std::endl;
+            file.close();
+        } else {
+            std::cout << "Unable to open file: client_log.txt" << std::endl;
+        }
+    } catch (const std::exception& e) {
+        // Handle exceptions
+        std::cout << "Exception occurred while handling log file: ";//<< e.what() << std::endl;
+    }
+}
+
 void Client::disconnect() {
     return;
 }

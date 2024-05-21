@@ -49,6 +49,7 @@ class Client {
         void sendData();
         void receiveResponse();
         void disconnect();
+        void createLog(const std::string& log_message);
 
         ~Client();
     public:

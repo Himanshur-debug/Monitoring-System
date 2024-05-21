@@ -22,7 +22,7 @@ public:
     ~GraphWindow();
 
 private slots:
-    void on_drawButton_clicked();
+    void on_drawButton_clicked(int index);
 
 private:
     void setupUi();
@@ -39,7 +39,7 @@ private:
     QVBoxLayout *mainLayout;
     QHBoxLayout *inputLayout;
     QPushButton *drawButton;
-    QLineEdit *macAddressInput;
+    QComboBox *comboBox;
 };
 
 #endif // GraphWindow_H
